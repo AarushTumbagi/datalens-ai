@@ -1,10 +1,16 @@
 # DataLens AI (Analyser)
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AarushTumbagi/datalens-ai)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-datalens--ai--beta.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://datalens-ai-beta.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AarushTumbagi/datalens-ai)
+
 > **Understand your data. Discover connections. Explore what changes.**
 
 DataLens AI is a full-stack, interactive data exploration and counterfactual simulation platform. It transforms raw CSV and Excel files into mathematically grounded analytical models, force-directed variable relationship graphs, and real-time what-if predictive simulations.
 
-- **🌐 Live Production Deployment**: [https://datalens-ai-beta.vercel.app](https://datalens-ai-beta.vercel.app)
+### 🔗 Quick Links
+- **🌐 Live Web Application**: [https://datalens-ai-beta.vercel.app](https://datalens-ai-beta.vercel.app)
+- **⚡ Live Backend Health Check**: [https://datalens-ai-beta.vercel.app/api/health](https://datalens-ai-beta.vercel.app/api/health)
 - **📦 GitHub Repository**: [https://github.com/AarushTumbagi/datalens-ai](https://github.com/AarushTumbagi/datalens-ai)
 
 ---
@@ -62,7 +68,7 @@ This project is architected to deploy the **React + TypeScript + Vite frontend**
 ### 3. Verifying Deployment Health
 Once deployed, verify the backend serverless health endpoint:
 ```bash
-curl https://your-deployment.vercel.app/api/health
+curl https://datalens-ai-beta.vercel.app/api/health
 ```
 Expected response:
 ```json
