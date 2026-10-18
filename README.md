@@ -1,94 +1,195 @@
-# DataLens AI (Analyser)
+# DataLens AI
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AarushTumbagi/datalens-ai)
-[![Live Demo](https://img.shields.io/badge/Live_Demo-datalens--ai--beta.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://datalens-ai-beta.vercel.app)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AarushTumbagi/datalens-ai)
+**Turn raw CSV / Excel files into grounded analytics — profiling, a variable-relationship graph, and a what‑if simulation lab.**
+
+> ### 🧠 No external API calls. Ever.
+> **Every number in DataLens AI is computed by our own Python engine on your machine — not fetched from someone else's model.** Correlations, distributions, regression coefficients and counterfactual predictions all come from in‑house `pandas` / `NumPy` / `SciPy` / `scikit-learn` math. The app runs **100% offline and deterministically**, and the optional LLM is *only* a phrasing layer that never invents a statistic. Pull the network cable out and the analysis still works.
 
 > **Understand your data. Discover connections. Explore what changes.**
 
-DataLens AI is a full-stack, interactive data exploration and counterfactual simulation platform. It transforms raw CSV and Excel files into mathematically grounded analytical models, force-directed variable relationship graphs, and real-time what-if predictive simulations.
+<p align="center">
+  <a href="https://datalens-ai-beta.vercel.app" target="_blank" rel="noopener noreferrer">
+    <img alt="Open the Live Demo" src="https://img.shields.io/badge/🚀_Live_Demo-Open_in_new_tab-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+  </a>
+  <a href="https://github.com/AarushTumbagi/datalens-ai" target="_blank" rel="noopener noreferrer">
+    <img alt="GitHub Repository" src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" />
+  </a>
+</p>
 
-### 🔗 Quick Links
-- **🌐 Live Web Application**: [https://datalens-ai-beta.vercel.app](https://datalens-ai-beta.vercel.app)
-- **⚡ Live Backend Health Check**: [https://datalens-ai-beta.vercel.app/api/health](https://datalens-ai-beta.vercel.app/api/health)
-- **📦 GitHub Repository**: [https://github.com/AarushTumbagi/datalens-ai](https://github.com/AarushTumbagi/datalens-ai)
+<p align="center">
+  <a href="https://vercel.com/new/clone?repository-url=https://github.com/AarushTumbagi/datalens-ai" target="_blank" rel="noopener noreferrer">
+    <img src="https://vercel.com/button" alt="Deploy with Vercel" />
+  </a>
+</p>
+
+---
+
+## 🔗 Live Demo
+
+<details open>
+<summary><strong>▶ Click to toggle live demo details</strong></summary>
+
+<br />
+
+**Production URL:** [https://datalens-ai-beta.vercel.app](https://datalens-ai-beta.vercel.app)
+
+<a href="https://datalens-ai-beta.vercel.app" target="_blank" rel="noopener noreferrer">
+  <img alt="Launch DataLens AI" src="https://img.shields.io/badge/▶_Launch_DataLens_AI-opens_in_a_new_window-14b8a6?style=for-the-badge" />
+</a>
+
+> The button above is a plain link with `target="_blank"` — clicking it opens the application in a **new browser tab / window**, leaving this repository page untouched.
+
+| Resource | Link |
+| --- | --- |
+| 🌐 Web Application | https://datalens-ai-beta.vercel.app |
+| ⚡ Backend Health Check | https://datalens-ai-beta.vercel.app/api/health |
+| 📦 Repository | https://github.com/AarushTumbagi/datalens-ai |
+
+</details>
+
+---
+
+## 📌 The Brief
+
+Most "AI data" tools are a chat box bolted onto a black‑box API: you upload a spreadsheet, the numbers travel to a third‑party server, and a language model narrates statistics you can't verify. **DataLens AI does the opposite.** It treats statistics as the source of truth and language as a thin, optional veneer on top.
+
+Upload a CSV or Excel file and DataLens AI will:
+
+1. **Read it honestly** — validate the file, infer column types, and measure missingness/duplicates/outliers *without silently cleaning anything*.
+2. **Quantify relationships** — pick the *mathematically correct* association measure per pair (Pearson *r*, Spearman *ρ*, Cramér's *V*, correlation ratio *η*) and draw them as an interactive network.
+3. **Model what‑if** — fit a leakage‑free regression and let you move sliders to see how predictions change, with uncertainty and extrapolation warnings.
+4. **Explain it in words** — grounded, evidence‑backed prose for whatever you select, generated deterministically from the computed results.
+
+> **Catchphrase:** *No API calls required — the math is ours, the evidence is yours.*
+
+---
+
+## 📸 Screenshots
+
+All captures below are of the **live production build** (`datalens-ai-beta.vercel.app`), loaded with the bundled *Environmental Sensor Telemetry* sample dataset.
+
+### Landing & Analytical Pipeline
+![DataLens AI landing page with the six-stage analytical pipeline widget](docs/screenshots/01-landing.png)
+
+### Overview — Profiling & Empirical Distributions
+![Overview tab with per-variable sparklines, ranges and IQR outlier counts](docs/screenshots/02-overview.png)
+
+### Data Explorer — Sortable Grid & Cohort Isolation
+![Data Explorer tabular grid with type badges and row selection](docs/screenshots/03-data-explorer.png)
+
+### Visualization Studio — Distribution Analysis
+![Visualization Studio histogram of temperature_c](docs/screenshots/04-visualizations.png)
+
+### Relationship Graph — Measured Associations
+![Force-directed relationship graph with cutoff slider](docs/screenshots/05-relationship-graph.png)
+
+### What‑If Lab — Counterfactual Simulation
+<p align="center">
+  <img src="docs/screenshots/06-what-if-trained.png" alt="What-If Lab after fitting a Ridge regression, showing sliders, metrics, feature importances and a partial-dependence sweep" width="100%" />
+</p>
+
+### Insights — Ranked Automated Discoveries
+![Insights tab with correlations ranked by significance score](docs/screenshots/07-insights.png)
+
+---
+
+## 🧭 How It Works
+
+### Analytical pipeline
+
+```mermaid
+flowchart TD
+    A["📥 Upload CSV / XLSX / XLS"] --> B["🔐 File Loader<br/>validate extension, sniff delimiter,<br/>infer types, guard limits"]
+    B --> C["🔎 Profiling Engine<br/>descriptive stats, missingness,<br/>duplicates, IQR outliers"]
+    C --> D{"Explore the data"}
+    D --> E["🗂️ Data Explorer<br/>paginated grid + cohort isolation"]
+    D --> F["📊 Visualization Studio<br/>histogram · scatter · bar · line · box"]
+    D --> G["🕸️ Relationship Engine<br/>Pearson r · Spearman ρ ·<br/>Cramér's V · correlation ratio η"]
+    D --> H["🧪 What-If Lab<br/>leakage-free Ridge / ElasticNet / RF"]
+    C --> I["💡 Insights Engine<br/>rank by effect size"]
+    G --> J["🗣️ Context & Explanation Engine<br/>deterministic, grounded in computed results"]
+    H --> J
+    I --> J
+    J --> K["✨ Optional LLM polish<br/>(rephrases only — never a source of numbers)"]
+```
+
+### Request lifecycle (serverless)
+
+```mermaid
+sequenceDiagram
+    participant U as Browser (React 19 + Vite)
+    participant A as /api (Vercel Serverless ASGI)
+    participant P as FastAPI + pandas/sklearn
+    U->>A: POST /api/datasets/upload (gzip stream)
+    A->>P: load + profile dataframe
+    P-->>U: dataset_id + profile JSON
+    U->>A: GET /api/datasets/:id/graph?threshold=
+    P->>P: compute pairwise associations
+    P-->>U: nodes + edges (metric, value, n)
+    U->>A: POST /api/datasets/:id/train (target, features)
+    P->>P: fit preprocessing on train split only
+    P-->>U: metrics + model_id + feature ranges
+    U->>A: POST /api/datasets/:id/predict (model_id, inputs)
+    P-->>U: prediction + Δ vs baseline + interval
+```
+
+### The one rule that keeps it trustworthy
+
+```mermaid
+flowchart LR
+    S["Computed statistics<br/>(source of truth)"] --> R["Results JSON<br/>schema-validated"]
+    R --> D["Deterministic explanation"]
+    R -. "optional" .-> L["LLM rephrasing"]
+    L --> O["Final prose"]
+    D --> O
+    L --> X{{"❌ cannot add new numbers"}}
+```
 
 ---
 
 ## 🌟 The Three Signature Features
 
-### 1. Context-Aware AI Explanation Engine
-- Understand any dataset, column, row cohort, or relationship edge with grounded statistical commentary.
-- Zero hallucination policy: Every claim is supported by calculated metrics ($r$, $\rho$, $\eta$, Cramér's V, IQR bounds, p-values).
-- **Ardra Pattern**: Interactive Context Drawer displaying pre-computed "Important Questions" pills (e.g., *"What is the average temperature over time?"*, *"Is there a correlation between humidity and current?"*), natural language Q&A, and inline evidence tables.
-- Operates 100% deterministically out-of-the-box with optional OpenAI LLM enhancement via `OPENAI_API_KEY`.
+### 1. Context-Aware Explanation Engine
+- Understand any dataset, column, cohort, or relationship edge with grounded statistical commentary.
+- **Zero-hallucination stance:** every claim traces back to a calculated metric (*r*, *ρ*, *η*, Cramér's *V*, IQR bounds, p-values).
+- Interactive **Context Drawer** with pre-computed "Important Questions" pills, natural-language Q&A, and inline evidence tables.
+- Works out of the box with **no LLM at all**; an optional provider only rephrases what was already computed.
 
 ### 2. Interactive Variable Relationship Graph
-- Force-directed network where nodes represent dataset variables and edges represent calculated association metrics.
-- Computes Pearson $r$ and Spearman rank $\rho$ for continuous variables, Cramér's $V$ for categorical pairs, and Correlation Ratio ($\eta$) for continuous-categorical pairs.
-- **AutoViz Pattern**: Interactive node inspection with floating empirical distribution sparklines and micro-cards directly on the canvas without leaving context.
-- **Graphext Pattern**: Relationship strength slider filter ($|r| \ge 0.1 \dots 0.8$), variable search, and edge click drawer displaying pairwise scatter plots with linear trendlines.
+- Force-directed network of variables; edges are **measured associations**, not causal arrows.
+- Per-pair measure selection: Pearson *r* / Spearman *ρ* (continuous), Cramér's *V* (categorical), Correlation Ratio *η* (continuous × categorical).
+- Strength-threshold slider, variable search, **Top Drivers / Focus / Full Network** modes, and an edge drawer with pairwise scatter + trendline.
+- Node inspection shows floating empirical distribution sparklines without leaving the canvas.
 
 ### 3. What-If Analysis Lab
-- **LinkedIn ML Lab Pattern**: Predictive counterfactual simulation laboratory.
-- Outcome variable selection (continuous target) and multi-feature toggle selection.
-- Machine learning pipeline with leakage prevention: Preprocessing (One-Hot Encoding, StandardScaler, Robust Imputation) is fitted strictly on the 80% train split.
-- Models: L2 Ridge Regression, ElasticNet, and Random Forest.
-- Performance validation: $R^2$ Score, RMSE, MAE, and 5-Fold Cross-Validation mean & standard deviation.
-- Real-time parameter sliders displaying baseline predictions, updated predictions, absolute shift ($\Delta y$), and relative shift ($\Delta\%$) badges.
-- Single-variable sensitivity analysis curves (Partial Dependence) sweeping across feature domains while holding other variables constant.
-- Out-of-distribution extrapolation warnings when inputs exceed training bounds.
+- Choose a continuous outcome and features, fit **Ridge / ElasticNet / Random Forest**.
+- **Leakage prevention:** imputation, scaling and one-hot encoding are fit strictly on the 80% train split.
+- Validation with *R²*, RMSE, MAE and 5-fold cross-validated *R²*.
+- Real-time sliders with baseline vs. updated predictions, absolute (*Δy*) and relative (*Δ%*) shifts.
+- Single-variable **partial-dependence** sweeps plus out-of-distribution extrapolation warnings.
 
 ---
 
-## ☁️ Deploying to Vercel (Unified Single Repo)
+## 🏗️ Architecture
 
-This project is architected to deploy the **React + TypeScript + Vite frontend** and **FastAPI Python backend** together seamlessly on Vercel from a single repository.
+DataLens AI deploys the **React frontend and the FastAPI backend together from one repository** on Vercel.
 
-### 1. Architecture Overview
-- **Frontend**: Root Vite app producing static assets in `dist/`.
-- **Backend**: `api/index.py` wraps the FastAPI application into a Vercel Serverless Function running on Python 3.12/3.11.
-- **Routing**: `vercel.json` rewrites `/api/(.*)` requests directly to `/api/index.py`. The frontend uses relative paths (`/api/...`), eliminating cross-origin CORS latency and configuration issues.
-- **File Upload Expansion**: Standard Vercel Serverless Functions enforce a 4.5MB request body ceiling. DataLens AI implements **transparent browser-side streaming gzip compression** (`CompressionStream('gzip')`) on uploaded files larger than 100KB, compressing text-heavy CSV/Excel files by 75–85% and extending practical upload capacity up to **~25MB–30MB**!
-- **Stateless Storage & Model Cache**: Ephemeral runtime storage uses `/tmp/datalens_storage/` with automatic sample re-hydration and compressed model artifact persistence (`.pkl.gz`).
-
-### 2. One-Click Deployment Steps
-1. Push this repository to GitHub or GitLab.
-2. In your [Vercel Dashboard](https://vercel.com/dashboard), click **Add New...** -> **Project**.
-3. Import your DataLens repository:
-   - **Framework Preset**: Vite
-   - **Root Directory**: `./` (leave default)
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-4. Add Environment Variables (optional, in Vercel Project Settings):
-   - `OPENAI_API_KEY`: *(Optional)* Enables OpenAI LLM generated answers alongside the deterministic statistical engine.
-   - `APP_ENV`: `production`
-5. Click **Deploy**. Vercel will build the Vite frontend and compile the Python serverless function automatically.
-
-### 3. Verifying Deployment Health
-Once deployed, verify the backend serverless health endpoint:
-```bash
-curl https://datalens-ai-beta.vercel.app/api/health
-```
-Expected response:
-```json
-{
-  "status": "healthy",
-  "app": "DataLens AI Backend",
-  "version": "1.0.0",
-  "environment": "production",
-  "storage_dir": "/tmp/datalens_storage",
-  "samples_available": true
-}
-```
+- **Frontend** — root Vite app (React 19 + TypeScript + Tailwind v4) → static assets in `dist/`.
+- **Backend** — `api/index.py` wraps the FastAPI app as a Vercel Python Serverless Function.
+- **Routing** — `vercel.json` rewrites `/api/(.*)` to the function; the client uses relative `/api/...` paths (no CORS, no API keys in the browser).
+- **Uploads** — the browser **gzip-streams** files over 100 KB (`CompressionStream('gzip')`), compressing text CSVs 75–85% to stay under the serverless body limit.
+- **Storage** — ephemeral `/tmp/datalens_storage/`; in-memory dataset registry and cached model artifacts. No database, no accounts, no persistent tracking.
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Python 3.11+, FastAPI, pandas, NumPy, SciPy, scikit-learn, openpyxl, Pydantic, pytest
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons
-- **Deployment**: Vercel Serverless (ASGI), Docker & Docker Compose
+| Layer | Technologies |
+| --- | --- |
+| **Backend** | Python 3.11+, FastAPI, pandas, NumPy, SciPy, scikit-learn, openpyxl, Pydantic, pytest |
+| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons |
+| **Deployment** | Vercel Serverless (ASGI), Docker & Docker Compose |
+| **AI (optional)** | Any OpenAI-compatible endpoint via env vars — disabled by default |
 
 ---
 
@@ -98,45 +199,77 @@ Expected response:
 - Python 3.10+
 - Node.js 18+ and npm
 
-### 1. Backend Service
+### 1. Backend service
+
 ```bash
 cd backend
 python3 -m pip install -r requirements.txt
 python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8008 --reload
 ```
-- Swagger API Docs: `http://localhost:8008/docs`
+
+- Swagger API docs: `http://localhost:8008/docs`
 - Health check: `http://localhost:8008/health`
 
-### 2. Frontend Service
+### 2. Frontend service
+
 ```bash
-# In the root directory:
+# from the repository root
 npm install
 npm run dev
 ```
-- Web Application: `http://localhost:5173` (proxies `/api` to `http://localhost:8008`)
+
+- Web application: `http://localhost:3000` (proxies `/api` to `http://127.0.0.1:8008`)
+
+### 3. Or start both at once
+
+```bash
+./start.sh
+```
 
 ---
 
 ## 🧪 Running Automated Tests
 
-### Backend Unit & Integration Tests
 ```bash
+# Backend analytical test suites
+cd backend
 python3 -m pytest tests/test_backend.py -v
-```
-All 9 core analytical test suites verify:
-- Health & diagnostic checks
-- Sample dataset ingestion & fallback re-hydration
-- Statistical profiling & IQR outlier detection
-- Relationship graph calculation & threshold filters
-- Leakage-free regression training & evaluation
-- What-if scenario prediction & delta arithmetic
-- Partial dependence sensitivity sweeps
-- Context-aware explanations & natural-language question answering
-- Ranked statistical insights
 
-### Frontend Build Verification
-```bash
+# Frontend production build verification
 npm run build
+```
+
+The backend suites cover health checks, sample ingestion, statistical profiling & IQR outliers, relationship calculation & thresholds, leakage-free training, what-if prediction deltas, partial-dependence sweeps, grounded explanations/Q&A, and ranked insights.
+
+---
+
+## ☁️ Deployment (Vercel, single repo)
+
+1. Push the repository to GitHub.
+2. In the [Vercel dashboard](https://vercel.com/dashboard) choose **Add New → Project** and import the repo.
+   - **Framework Preset:** Vite
+   - **Root Directory:** `./`
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+3. *(Optional)* Environment variables:
+   - `OPENAI_API_KEY` — enables optional LLM rephrasing. **Not required.**
+   - `APP_ENV` — `production`
+4. **Deploy.** Vercel builds the Vite frontend and the Python function automatically.
+
+Verify:
+
+```bash
+curl https://datalens-ai-beta.vercel.app/api/health
+```
+
+```json
+{
+  "status": "healthy",
+  "service": "DataLens AI Analytical Backend",
+  "version": "1.0.0",
+  "runtime": "vercel-serverless",
+  "storage": "/tmp/datalens_storage"
+}
 ```
 
 ---
@@ -146,35 +279,43 @@ npm run build
 ```text
 datalens-ai/
 ├── api/
-│   ├── index.py                # Vercel Python Serverless ASGI Entrypoint
-│   └── requirements.txt        # Serverless Python dependencies
+│   ├── index.py                # Vercel Python serverless ASGI entrypoint
+│   └── requirements.txt
 ├── backend/
-│   ├── requirements.txt
-│   ├── tests/
-│   │   └── test_backend.py
-│   └── app/
-│       ├── main.py             # FastAPI App & Health Routes
-│       ├── core/config.py      # /tmp Serverless Storage Configuration
-│       ├── samples/            # Bundled Fallback Datasets
-│       ├── schemas/            # Pydantic Schemas
-│       └── services/           # Profiling, ML Models, Explainers
-├── src/                        # Vite + React 19 Frontend Source
-│   ├── App.tsx
-│   ├── main.tsx
-│   ├── index.css
-│   ├── components/             # Explorer, Graph, What-If Lab, Drawers
-│   └── services/api.ts         # Relative /api Client with Gzip Streamer
+│   ├── app/
+│   │   ├── main.py             # FastAPI app + health routes
+│   │   ├── core/               # config, errors
+│   │   ├── samples/            # bundled sample datasets
+│   │   ├── schemas/            # Pydantic models
+│   │   ├── services/           # profiling, statistics, modeling, explanations, questions
+│   │   └── api/routes/         # datasets, charts, relationships, explanations, insights, models
+│   ├── tests/test_backend.py
+│   └── requirements.txt
+├── src/                        # React 19 + Vite frontend
+│   ├── components/             # explorer, graph, what-if, drawers, common UI
+│   ├── services/api.ts         # relative /api client with gzip uploader
+│   └── types/api.ts
 ├── public/
-├── index.html                  # Root HTML
-├── package.json                # Vite + Tailwind Scripts
-├── vite.config.ts              # Vite Config with Dev Proxy & React Plugin
-├── tsconfig.json
-├── vercel.json                 # Vercel Routing Configuration (/api/* -> index.py)
-├── requirements.txt            # Root dependencies for Vercel Python Builder
-└── sample_data/
+├── docs/screenshots/           # README captures
+├── sample_data/
+├── index.html
+├── package.json
+├── vite.config.ts
+├── vercel.json
+└── requirements.txt
 ```
 
 ---
 
+## 🔒 Privacy & Limits
+
+- Uploads are validated on the backend; file size, row counts and resource use are bounded.
+- Dataset IDs are server-generated; no client filename is used as a storage path.
+- **No dataset contents are logged**, and no full datasets are sent to any external service.
+- Without an AI key configured, DataLens AI **never makes an outbound API call**.
+
+---
+
 ## 📜 License
-MIT License. Free for open source and commercial use.
+
+MIT License — free for open source and commercial use.
