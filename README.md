@@ -4,7 +4,8 @@
 
 DataLens AI is a full-stack, interactive data exploration and counterfactual simulation platform. It transforms raw CSV and Excel files into mathematically grounded analytical models, force-directed variable relationship graphs, and real-time what-if predictive simulations.
 
-Now fully configured for **One-Click Monorepo Deployment on Vercel** (Vite + React 19 Frontend with Python FastAPI Serverless Functions).
+- **🌐 Live Production Deployment**: [https://datalens-ai-beta.vercel.app](https://datalens-ai-beta.vercel.app)
+- **📦 GitHub Repository**: [https://github.com/AarushTumbagi/datalens-ai](https://github.com/AarushTumbagi/datalens-ai)
 
 ---
 
