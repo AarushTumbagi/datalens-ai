@@ -1,5 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/**/*.py": {
+      "excludeFiles": "{.git,node_modules,sample_data,public,dist}/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",

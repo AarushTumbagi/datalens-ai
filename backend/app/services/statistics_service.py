@@ -1,11 +1,36 @@
+import math
 import numpy as np
 import pandas as pd
-from scipy import stats
 from typing import List, Dict, Any, Optional, Tuple
 from app.schemas.models import (
     GraphNode, GraphEdge, RelationshipGraphResponse, PairwiseDetailResponse
 )
 from app.services.profiling_service import ProfilingService
+
+def _compute_chi2_contingency(confusion_matrix: pd.DataFrame) -> float:
+    obs = np.asarray(confusion_matrix, dtype=float)
+    r_sum = obs.sum(axis=1, keepdims=True)
+    c_sum = obs.sum(axis=0, keepdims=True)
+    tot = obs.sum()
+    if tot == 0:
+        return 0.0
+    exp = (r_sum @ c_sum) / tot
+    mask = exp > 0
+    chi2 = np.sum((obs[mask] - exp[mask]) ** 2 / exp[mask])
+    return float(chi2)
+
+def _compute_pearson(s1: pd.Series, s2: pd.Series) -> Tuple[float, float]:
+    r = float(s1.corr(s2))
+    n = len(s1)
+    if n <= 2 or abs(r) >= 1.0 or np.isnan(r):
+        return (0.0 if np.isnan(r) else r), 1.0
+    t_val = r * math.sqrt((n - 2) / max(1e-12, 1.0 - r**2))
+    p = math.erfc(abs(t_val) / math.sqrt(2))
+    return r, float(min(1.0, max(0.0, p)))
+
+def _compute_spearman(s1: pd.Series, s2: pd.Series) -> Tuple[float, float]:
+    rho = float(s1.corr(s2, method="spearman"))
+    return (0.0 if np.isnan(rho) else rho), 0.0
 
 class StatisticsService:
     @staticmethod
@@ -15,7 +40,7 @@ class StatisticsService:
         if valid_n == 0:
             return 0.0, 0
             
-        chi2 = stats.chi2_contingency(confusion_matrix)[0]
+        chi2 = _compute_chi2_contingency(confusion_matrix)
         n = confusion_matrix.sum().sum()
         phi2 = chi2 / n
         r, k = confusion_matrix.shape
@@ -135,8 +160,8 @@ class StatisticsService:
                         s1, s2 = s1[valid_mask], s2[valid_mask]
                         valid_n = len(s1)
                         if valid_n >= 4 and s1.std() > 0 and s2.std() > 0:
-                            r, p = stats.pearsonr(s1, s2)
-                            spearman_rho, _ = stats.spearmanr(s1, s2)
+                            r, p = _compute_pearson(s1, s2)
+                            spearman_rho, _ = _compute_spearman(s1, s2)
                             metric = "pearson"
                             val = float(r) if not np.isnan(r) else 0.0
                             p_val = float(p) if not np.isnan(p) else None
@@ -220,7 +245,7 @@ class StatisticsService:
             valid_n = len(s1)
             
             if valid_n >= 3 and s1.std() > 0 and s2.std() > 0:
-                r, p = stats.pearsonr(s1, s2)
+                r, p = _compute_pearson(s1, s2)
                 metric_name = "Pearson Correlation (r)"
                 metric_value = round(float(r), 4)
                 p_val = round(float(p), 6)
