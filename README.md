@@ -69,27 +69,52 @@ Upload a CSV or Excel file and DataLens AI will:
 All captures below are of the **live production build** (`datalens-ai-beta.vercel.app`), loaded with the bundled *Environmental Sensor Telemetry* sample dataset.
 
 ### Landing & Analytical Pipeline
-![DataLens AI landing page with the six-stage analytical pipeline widget](docs/screenshots/01-landing.png)
+![DataLens AI landing page with the six-stage analytical pipeline widget](docs/screenshots/01-landing.webp)
 
-### Overview — Profiling & Empirical Distributions
-![Overview tab with per-variable sparklines, ranges and IQR outlier counts](docs/screenshots/02-overview.png)
+<table>
+<tr>
+<td width="50%">
 
-### Data Explorer — Sortable Grid & Cohort Isolation
-![Data Explorer tabular grid with type badges and row selection](docs/screenshots/03-data-explorer.png)
+**Overview — Profiling & Distributions**
+![Overview tab with per-variable sparklines, ranges and IQR outlier counts](docs/screenshots/02-overview.webp)
 
-### Visualization Studio — Distribution Analysis
-![Visualization Studio histogram of temperature_c](docs/screenshots/04-visualizations.png)
+</td>
+<td width="50%">
 
-### Relationship Graph — Measured Associations
-![Force-directed relationship graph with cutoff slider](docs/screenshots/05-relationship-graph.png)
+**Insights — Ranked Discoveries**
+![Insights tab with correlations ranked by significance score](docs/screenshots/07-insights.webp)
 
-### What‑If Lab — Counterfactual Simulation
-<p align="center">
-  <img src="docs/screenshots/06-what-if-trained.png" alt="What-If Lab after fitting a Ridge regression, showing sliders, metrics, feature importances and a partial-dependence sweep" width="100%" />
-</p>
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-### Insights — Ranked Automated Discoveries
-![Insights tab with correlations ranked by significance score](docs/screenshots/07-insights.png)
+**Data Explorer — Sortable Grid**
+![Data Explorer tabular grid with type badges and row selection](docs/screenshots/03-data-explorer.webp)
+
+</td>
+<td width="50%">
+
+**Visualization Studio — Distributions**
+![Visualization Studio histogram of temperature_c](docs/screenshots/04-visualizations.webp)
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**Relationship Graph — Measured Associations**
+![Force-directed relationship graph with cutoff slider](docs/screenshots/05-relationship-graph.webp)
+
+</td>
+<td width="50%">
+
+**What‑If Lab — Counterfactual Simulation**
+![What-If Lab after fitting a Ridge regression with sliders and a partial-dependence sweep](docs/screenshots/06-what-if-trained.webp)
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -97,53 +122,21 @@ All captures below are of the **live production build** (`datalens-ai-beta.verce
 
 ### Analytical pipeline
 
-```mermaid
-flowchart TD
-    A["📥 Upload CSV / XLSX / XLS"] --> B["🔐 File Loader<br/>validate extension, sniff delimiter,<br/>infer types, guard limits"]
-    B --> C["🔎 Profiling Engine<br/>descriptive stats, missingness,<br/>duplicates, IQR outliers"]
-    C --> D{"Explore the data"}
-    D --> E["🗂️ Data Explorer<br/>paginated grid + cohort isolation"]
-    D --> F["📊 Visualization Studio<br/>histogram · scatter · bar · line · box"]
-    D --> G["🕸️ Relationship Engine<br/>Pearson r · Spearman ρ ·<br/>Cramér's V · correlation ratio η"]
-    D --> H["🧪 What-If Lab<br/>leakage-free Ridge / ElasticNet / RF"]
-    C --> I["💡 Insights Engine<br/>rank by effect size"]
-    G --> J["🗣️ Context & Explanation Engine<br/>deterministic, grounded in computed results"]
-    H --> J
-    I --> J
-    J --> K["✨ Optional LLM polish<br/>(rephrases only — never a source of numbers)"]
-```
+<p align="center">
+  <img src="docs/diagrams/pipeline.svg" alt="DataLens AI analytical pipeline: upload → load → profile → explore → relationship / what-if / insights → explanations" width="780" />
+</p>
 
 ### Request lifecycle (serverless)
 
-```mermaid
-sequenceDiagram
-    participant U as Browser (React 19 + Vite)
-    participant A as /api (Vercel Serverless ASGI)
-    participant P as FastAPI + pandas/sklearn
-    U->>A: POST /api/datasets/upload (gzip stream)
-    A->>P: load + profile dataframe
-    P-->>U: dataset_id + profile JSON
-    U->>A: GET /api/datasets/:id/graph?threshold=
-    P->>P: compute pairwise associations
-    P-->>U: nodes + edges (metric, value, n)
-    U->>A: POST /api/datasets/:id/train (target, features)
-    P->>P: fit preprocessing on train split only
-    P-->>U: metrics + model_id + feature ranges
-    U->>A: POST /api/datasets/:id/predict (model_id, inputs)
-    P-->>U: prediction + Δ vs baseline + interval
-```
+<p align="center">
+  <img src="docs/diagrams/request-lifecycle.svg" alt="Serverless request lifecycle between the browser, the Vercel ASGI function and the FastAPI analytics engine" width="640" />
+</p>
 
 ### The one rule that keeps it trustworthy
 
-```mermaid
-flowchart LR
-    S["Computed statistics<br/>(source of truth)"] --> R["Results JSON<br/>schema-validated"]
-    R --> D["Deterministic explanation"]
-    R -. "optional" .-> L["LLM rephrasing"]
-    L --> O["Final prose"]
-    D --> O
-    L --> X{{"❌ cannot add new numbers"}}
-```
+<p align="center">
+  <img src="docs/diagrams/trust-model.svg" alt="Trust model: statistics are the source of truth; the optional LLM can only rephrase, never add numbers" width="840" />
+</p>
 
 ---
 
@@ -295,8 +288,10 @@ datalens-ai/
 │   ├── components/             # explorer, graph, what-if, drawers, common UI
 │   ├── services/api.ts         # relative /api client with gzip uploader
 │   └── types/api.ts
-├── public/
-├── docs/screenshots/           # README captures
+├── public/                     # autoviz_bg.webp (optimised background)
+├── docs/
+│   ├── screenshots/            # README captures (WebP, ~50–80 KB each)
+│   └── diagrams/               # static SVG flowcharts used in this README
 ├── sample_data/
 ├── index.html
 ├── package.json
